@@ -8,6 +8,7 @@ const AnecdoteForm = () => {
     const submitHandler = e => {
         e.preventDefault()
         dispatch(createNew(e.target.content.value))
+        // dispatch({ type: 'anecdotes/createNew', payload: e.target.content.value })
         e.target.content.value = ""
     }
 
