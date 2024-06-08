@@ -58,10 +58,13 @@ const anecSlice = createSlice({
     createNew(state, action) {
       const newAnec = asObject(action.payload)
       state.push(newAnec)
+    },
+    setAnecdotes(state, action) {
+      return action.payload
     }
   }
 })
 
 
-export const { castVote, createNew } = anecSlice.actions
+export const { castVote, createNew, setAnecdotes } = anecSlice.actions
 export default anecSlice.reducer
