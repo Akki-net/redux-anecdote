@@ -1,5 +1,6 @@
 import { createSlice, current } from "@reduxjs/toolkit"
-import { getAll } from "../services/anecdotes"
+import { create, getAll } from "../services/anecdotes"
+import { setNotification } from "./notificationReducer"
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -75,5 +76,16 @@ export const initialization = () => {
   return async dispatch => {
       const anecdotes = await getAll()
       dispatch(setAnecdotes(anecdotes))
+  }
+}
+
+export const createOne = content => {
+  return async dispatch => {
+    const newAnec = await create(asObject(content))
+    dispatch(createNew(newAnec))
+    dispatch(setNotification(`a new anecedote "${content}" created`))
+    setTimeout(() => {
+        dispatch(setNotification(null))
+    }, 3000) 
   }
 }
