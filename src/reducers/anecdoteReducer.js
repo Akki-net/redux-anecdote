@@ -1,5 +1,5 @@
 import { createSlice, current } from "@reduxjs/toolkit"
-import { create, getAll } from "../services/anecdotes"
+import { create, getAll, update } from "../services/anecdotes"
 import { setNotification } from "./notificationReducer"
 
 const anecdotesAtStart = [
@@ -55,8 +55,8 @@ const anecSlice = createSlice({
   initialState,
   reducers: {
     castVote(state, action) {
-      return state.map(s => s.id === action.payload
-        ? { ...s, votes: s.votes + 1 } : s)
+      return state.map(s => s.id === action.payload.id
+        ? action.payload.updatedAnec : s)
     },
     createNew(state, action) {
       const newAnec = action.payload
@@ -74,8 +74,8 @@ export default anecSlice.reducer
 
 export const initialization = () => {
   return async dispatch => {
-      const anecdotes = await getAll()
-      dispatch(setAnecdotes(anecdotes))
+    const anecdotes = await getAll()
+    dispatch(setAnecdotes(anecdotes))
   }
 }
 
@@ -85,7 +85,18 @@ export const createOne = content => {
     dispatch(createNew(newAnec))
     dispatch(setNotification(`a new anecedote "${content}" created`))
     setTimeout(() => {
-        dispatch(setNotification(null))
-    }, 3000) 
+      dispatch(setNotification(null))
+    }, 3000)
+  }
+}
+
+export const updateOne = (id, obj) => {
+  return async dispatch => {
+    const updatedAnec = await update(id, obj)
+    dispatch(castVote({ id, updatedAnec }))
+    dispatch(setNotification(`a vote is casted for "${updatedAnec.content}"`))
+    setTimeout(() => {
+      dispatch(setNotification(null))
+    }, 3000)
   }
 }

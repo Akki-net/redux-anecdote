@@ -1,7 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { castVote } from '../reducers/anecdoteReducer'
-import { setNotification } from '../reducers/notificationReducer'
+import { updateOne } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = () => {
     let anecdotes = useSelector(state => {
@@ -11,14 +10,9 @@ const AnecdoteList = () => {
     })
     anecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes)
     const dispatch = useDispatch()
-    const vote = (id) => {
-        dispatch(castVote(id))
-        const myAnec = anecdotes.find(anec => anec.id == id)
-        dispatch(setNotification(`a vote is casted for "${myAnec.content}"`))
-        setTimeout(() => {
-            dispatch(setNotification(null))
-        }, 3000)
-        // dispatch({ type: 'anecdotes/castVote', payload: id })
+    const vote = (id, anecdote) => {
+        const updatedAnec = { ...anecdote, votes: anecdote.votes + 1 }
+        dispatch(updateOne(id, updatedAnec))
     }
     return (
         <div>
@@ -30,7 +24,7 @@ const AnecdoteList = () => {
                     </div>
                     <div>
                         has {anecdote.votes}
-                        <button onClick={() => vote(anecdote.id)}>vote</button>
+                        <button onClick={() => vote(anecdote.id, anecdote)}>vote</button>
                     </div>
                 </div>
             )}

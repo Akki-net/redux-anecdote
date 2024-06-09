@@ -10,3 +10,8 @@ export const create = async (obj) => {
     const res = await axios.post(baseURL, obj)
     return res.data
 }
+
+export const update = async (id, obj) => {
+    const res = await axios.put(`${baseURL}/${id}`, obj)
+    return res.data
+}
